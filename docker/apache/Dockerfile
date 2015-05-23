@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 FROM ubuntu:latest
  
 MAINTAINER Dan Pupius <dan@pupi.us>
@@ -33,3 +34,6 @@ ADD apache-config.conf /etc/apache2/sites-enabled/000-default.conf
  
 # By default, simply start apache.
 CMD /usr/sbin/apache2ctl -D FOREGROUND
+=======
+FROM tutum/apache-php
+>>>>>>> c55f2f40f7e2e6a4dbbde42247b3d03ebd588296
