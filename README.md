@@ -1,5 +1,11 @@
 # RES: Web Infrastructure Lab
 
+### Members
+- Moret Jérôme
+- Duchoud Thibaud 
+- Ferreira Mario
+- Dolt Mathias
+
 ### Objectives
 
 The main goal of this lab is to learn **how to setup a web infrastructure** and to become familiar with the role of several components (http servers, reverse proxies, load balancers). 

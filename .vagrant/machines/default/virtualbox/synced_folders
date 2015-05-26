@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-{"virtualbox":{"/vagrant":{"guestpath":"/vagrant","hostpath":"/home/thibaud/Documents/HeigVd/2eAnnee/4eSemestre/RES/Laboratoires/Labo05/Labo/Teaching-HEIGVD-RES-2015-Labo-05","disabled":false}}}
-=======
 {"virtualbox":{"/vagrant":{"guestpath":"/vagrant","hostpath":"C:/HEIG/RES/Teaching-HEIGVD-RES-2015-Labo-05","disabled":false}}}
->>>>>>> c55f2f40f7e2e6a4dbbde42247b3d03ebd588296
