@@ -34,5 +34,5 @@ ADD apache-config.conf /etc/apache2/sites-enabled/000-default.conf
  
 # By default, simply start apache.
 CMD /usr/sbin/apache2ctl -D FOREGROUND
-COPY run.sh /var/www/
-CMD /var/www/run.sh
+#COPY run.sh /var/www/
+#CMD /var/www/run.sh

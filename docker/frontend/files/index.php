@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<title>Jeu de dé</title>	
-		<script src="jquery-2.1.4.min.js"></script>
+		<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 	</head>
 	<body>
 		<div>
@@ -12,7 +12,6 @@
 			<script>
 			function getJson() {	
 				$.getJSON("/back", function(result) {
-					alert("hello");
 					$.each(result, function(name, value) {	
 						alert(value);
 						$("#result").html("Vous avez tiré : ");
