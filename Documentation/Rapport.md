@@ -1,7 +1,7 @@
 # RES: Web Infrastructure Lab #
 
 ## Introduction ##
-L'objectif de ce laboratoire est d'apprendre à mettre en place une infrastructure Web en tenant compte du rôle de plusieurs composants (serveurs http, reverse proxy, équilibreurs de charge).
+L'objectif de ce laboratoire est d'apprendre à mettre en place une infrastructure Web en tenant compte du rôle de plusieurs composants (serveurs HTTP, reverse proxy, équilibreur de charge).
 
 Pour ça nous avons utilisé plusieurs logiciels (VirtualBox, Vagrant et Docker) afin de créer un environnement virtualisé.
 
@@ -31,9 +31,9 @@ Dockerfile réalisé pour la partie back-end:
 >     RUN npm install express
 >     CMD /opt/res/run.sh
 
-Tout d'abord, nous chargeons "node" pour pouvoir lancer un script JavaScript.
-Ensuite, le contenu du dossier "files" est copié dans le dossier "/opt/res/" de l'image qui sera lancé dans le "container".
-Pour finir, le fichier run.sh sera exécuté au lancement du "container" qui s'occupe de lancer le fichier JavaScript.
+Tout d'abord, on se base sur l'image "node" disponnible sur le Docker Hub.
+Ensuite, le contenu du dossier "files" est copié dans "/opt/res/" de l'image qui sera lancée dans le "container".
+Pour finir, le script run.sh sera exécuté au lancement du "container" qui va s'occuper de lancer le fichier JavaScript.
 
 #### app.js ####
 >     var express = require('express');
@@ -53,19 +53,19 @@ Pour finir, le fichier run.sh sera exécuté au lancement du "container" qui s'o
 >     
 >     });
 
-Le serveur écoute le port 80 et quand il reçoit une requête de la part de l'utilisateur il renvoie un chiffre aléatoire en réponse (lancement du dès).
+Le serveur écoute le port 80 et quand il reçoit une requête de la part de l'utilisateur il renvoie un chiffre aléatoire en réponse (simulation d'un lancement de dé).
 
-#### run.js ####
+#### run.sh ####
 >     node /opt/res/app.js -DFOREGROUND
 
-Le script lance simplement le script JavaScript.
+Le script demande à node d'exécuter le script JavaScript app.js.
 
 #### Marche à suivre ####
 
 #### Tests ####
 
 ### Front-end ###
-Le front-end renvoie une page HTML lorsqu'il reçoit une requête. Cette page HTML a un script JavaScript qui comunique avec le back-end pour le lancement du dé.
+Le front-end renvoie une page HTML lorsqu'il reçoit une requête. Cette page HTML contient un script JavaScript qui va communiquer avec le back-end pour le lancement du dé.
 
 #### Structure des fichiers ####
 Dossier back-end:
@@ -79,7 +79,7 @@ Contenu du dossier files:
 >     COPY files /app
 >     CMD /app/run.sh
 
-Tout d'abord, nous chargeons le serveur Apache pour afficher des pages avec le module PHP.
+Tout d'abord, on va se baser sur l'image apache-php de tutum pour le serveur Apache affin d'afficher des pages avec le module PHP.
 Ensuite, le contenu du dossier "files" est copié dans l'image à l'emplacement "/app".
 Pour finir, le script run.sh est exécuté au démarrage du "container".
 
@@ -176,7 +176,7 @@ Dossier www:
 >     #COPY run.sh /var/www/
 >     #CMD /var/www/run.sh
 
-Dans cette section, nous installons le serveur Apache ainsi que tous les modules nécessaires dans le "container".
+Dans cette section, nous installons le serveur Apache ainsi que l'activation des modules nécessaires au fonctionnement du reverse proxy et du load balancer dans le "container".
 
 #### apache-config.conf ####
 >     <VirtualHost *:80>
@@ -227,7 +227,7 @@ Dans cette section, nous installons le serveur Apache ainsi que tous les modules
 >     
 >     </VirtualHost>
 
-Ce fichier est utilisé pour configurer le serveur Apache pour le Loadbalancer ainsi que le reverse proxy. Pour le moment, ceci est fait avec les adresses en dur.
+Ce fichier est utilisé pour configurer le serveur Apache pour le Loadbalancer ainsi que le reverse proxy. Pour le moment, les adresses des serveurs de front-end et de back-end sont mises en dur (elles doivent ensuite être mises correctement grâce au UDP discovery).
 
 #### readme.txt ####
 Marche à suivre pour lancer le container.
@@ -241,6 +241,9 @@ Lancer le serveur Apache.
 >     <?php echo "<p>Apache - PHP - Load balancer?</p>"; ?>
 
 #### udpDiscovery.php ####
+
+Première version de l'UDP discovery (pas fonctionnelle), plus d'informations dans la partie de l'UDP discovery.
+
 >     <?php
 >     
 >     const RESPONSE = 'Je suis là';
@@ -279,13 +282,19 @@ Lancer le serveur Apache.
 
 *Normalement on doit pouvoir accéder au site depuis 192.168.42.42:8080 et au load balancer avec 192.168.42.42:8080/test.*
 
-*Possibilité de modifier le fichier de conf pour changer la méthode de load balancing (lbmethod_byrequests ...).*
+*Possibilité de modifier le fichier de configuration pour changer la méthode de load balancing (lbmethod_byrequests, ...).*
 
 #### Tests ####
 
-### UPD Rescovery ###
+### UPD Discovery ###
+L'implémentation de l'UDP discovery peut se faire de plusieurs manières différentes. Pour son fonctionnement, on peut imaginer les scénarios suivants:
+
+1. Chaque *x* temps, le serveur envoie une requête en multicast avec le message *Qui est-là ?*
+2. Chaque *x* temps, les noeuds s'annoncent en multicast avec le message *Je suis là !*
+3. Le noeud s'annonce une première fois et chaque *x* temps, le serveur envoie en unicast pour chaque noeud le message *Est-ce que tu es toujours là ?*
+
 
 ## Conclusion ##
-Pendant ce laboratoire nous avons fait face à une situation concrete et complexe de gestion d'une insfrastucture Web. Ceci nous a permis de mieux assembler la théorie vu en classe.
+Pendant ce laboratoire nous avons fait face à une situation concrète et complexe de gestion d'une infrastucture Web. Ceci nous a permis de mieux assimiler la théorie vue en classe.
 
-Nous avons rencontré quelques problèmes qui nous ont empéché d'assembler les plusieurs parties et avoir un résultat final complet.
+Nous avons rencontré quelques problèmes qui nous ont empéchés d'assembler les différentes parties afin d'avoir un résultat final complet et fonctionnel.
