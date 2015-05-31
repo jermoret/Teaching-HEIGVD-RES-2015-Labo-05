@@ -309,7 +309,7 @@ Pour son implémentation, on peut imaginer les scénarios suivants:
 	2. Il faut *re-build* l'image Docker du load balancer
 	3. **/!\ Il faut démarrer le conteneur du serveur UDP discovery avec une option de gestion de l'infrastructure Docker (option `--privileged` et lui passer le fichier `docker.sock`)**
 
-Pour la partie développement à proprement parler, on peut utiliser l'[https://docs.docker.com/reference/api/docker_remote_api/](https://docs.docker.com/reference/api/docker_remote_api/ "API de Docker").
+Pour la partie développement à proprement parler, on peut utiliser l'[API de Docker](https://docs.docker.com/reference/api/docker_remote_api/).
 
 ## Conclusion ##
 Pendant ce laboratoire nous avons fait face à une situation concrète et complexe de gestion d'une infrastucture Web. Ceci nous a permis de mieux assimiler la théorie vue en classe.
