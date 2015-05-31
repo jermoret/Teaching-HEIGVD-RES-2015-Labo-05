@@ -286,7 +286,7 @@ Première version de l'UDP discovery (pas fonctionnelle), plus d'informations da
 
 #### Tests ####
 
-### UPD Discovery ###
+### UDP Discovery ###
 L'implémentation de l'UDP discovery peut se faire de plusieurs manières différentes.
 
 Pour son fonctionnement, on peut imaginer les scénarios suivants:
