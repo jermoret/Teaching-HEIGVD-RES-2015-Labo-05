@@ -61,9 +61,7 @@ Le serveur écoute le port 80 et quand il reçoit une requête de la part de l'u
 Le script lance simplement le script JavaScript.
 
 #### Marche à suivre ####
-
-#### Tests ####
-
+Pour le serveur backend il suffit de créer l'image Docker à partir du Dockerfile, puis de lancer le/les container(s) sur le port 80.
 ### Front-end ###
 Le front-end renvoie une page HTML lorsqu'il reçoit une requête. Cette page HTML a un script JavaScript qui comunique avec le back-end pour le lancement du dé.
 
@@ -76,6 +74,7 @@ Contenu du dossier files:
 
 #### Dockerfile ####
 >     FROM tutum/apache-php
+>     MAINTAINER Jerome Moret
 >     COPY files /app
 >     CMD /app/run.sh
 
@@ -124,8 +123,7 @@ Bibliothèque JavaScript utilisé pour les requêtes Ajax.
 Démarrage du serveur Apache.
 
 #### Marche à suivre ####
-
-#### Tests ####
+Pour le serveur frontend il suffit de créer l'image Docker à partir du Dockerfile, puis de lancer le/les container(s) sur le port 80.
 
 ### Load Balancer ###
 
@@ -284,6 +282,94 @@ Lancer le serveur Apache.
 #### Tests ####
 
 ### UPD Rescovery ###
+
+
+## Tests ##
+Nous avons testé notre infrasctruture avec plusieurs containers backend et frontend.
+
+Étant donné que l'UDP Discovery n'a pas pu être achevé dans le temps imparti, nous avons à chaque fois pris soin de récupérer les adresses ip de nos containers pour pouvoir les entrer à la main dans le reverse-proxy.
+
+### Frontend ###
+Deux containers ont été démarés sur le port 80.
+
+- **Adresse ip du permier :** 172.17.0.1 
+- **Adresse ip du deuxième :** 172.17.0.2
+### Backend ###
+Deux containers ont été démarés sur le port 80.
+
+- **Adresse ip du permier :** 172.17.0.3 
+- **Adresse ip du deuxième :** 172.17.0.4 
+ 
+### Load-balancer et Reverse-proxy
+Voici la configuration du serveur Apache utilisée pour le test :
+
+    <VirtualHost *:80>
+    	ServerAdmin me@mydomain.com
+    	DocumentRoot /var/www/site
+
+	    <Directory /var/www/site/>
+	        Options Indexes FollowSymLinks MultiViews
+	        AllowOverride All
+	        Order deny,allow
+	        Allow from all
+	    </Directory>
+	
+	    ErrorLog ${APACHE_LOG_DIR}/error.log
+	    CustomLog ${APACHE_LOG_DIR}/access.log combined
+	
+	    <Proxy balancer://frontend>
+			
+	        # WebHead1
+	        BalancerMember http://172.17.0.1
+			  # WebHead2
+	        BalancerMember http://172.17.0.2
+	
+	        # Load Balancer Settings
+	        # We will be configuring a simple Round
+	        # Robin style load balancer.  This means
+	        # that all webheads take an equal share of
+	        # of the load.
+	        ProxySet lbmethod=bybusyness
+	        ProxySet stickysession=ROUTEID
+	
+	    </Proxy>
+	    
+	    <Proxy balancer://backend>
+			# Enlever les balancerMember et les mettre depuis l'UDP discovery
+			BalancerMember http://172.17.0.3
+			BalancerMember http://172.17.0.4
+			
+			ProxySet lbmethod=byrequests
+	    </Proxy>
+	
+	
+	    # Point of Balance
+	    # This setting will allow to explicitly name the
+	    # the location in the site that we want to be
+	    # balanced, in this example we will balance "/"
+	    # or everything in the site.
+	    ProxyPass /balancer-manager !
+	    ProxyPass /front balancer://frontend
+	    ProxyPass /back balancer://backend
+    </VirtualHost>
+
+Pour tester le bon fonctionnement du load-balancer nous nous sommes connecté sur le chemin /front du serveur et avons rafraichi la page plusieurs fois pour voir si la balance s'effectuait.
+
+![Alt text](/images/Capture.png "Réponse du frontend 1")
+![Alt text](/images/Capture2.png "Réponse du frontend 2")
+
+Le load-balancer fonctionne correctement !
+### Récupération des données JSON du backend ###
+Le serveur backend envoie le message suivant comme réponse au requête de type JSON :
+> {"value":x}
+> Où x correspond à la valeur du dé
+
+Testons maintenant la communication depuis le frontend vers le backend par le reverse-proxy.
+
+![Alt text](/images/Capture3.png "Réponse du backend")
+![Alt text](/images/Capture4.png "Réponse du backend")
+
+La récupération s'effectue correctement !
 
 ## Conclusion ##
 Pendant ce laboratoire nous avons fait face à une situation concrete et complexe de gestion d'une insfrastucture Web. Ceci nous a permis de mieux assembler la théorie vu en classe.

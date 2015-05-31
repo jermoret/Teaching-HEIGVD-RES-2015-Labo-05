@@ -13,7 +13,6 @@
 			function getJson() {	
 				$.getJSON("/back", function(result) {
 					$.each(result, function(name, value) {	
-						alert(value);
 						$("#result").html("Vous avez tiré : ");
 						$("#result").append(value);
 					});
@@ -23,6 +22,7 @@
 			}
 			</script>
 			<div id="result" class="result"></div>
+			<p> Adresse IP du frontend : <?php echo $_SERVER['SERVER_ADDR']; ?><p>
 		</div>
 	</body>
 </html>
