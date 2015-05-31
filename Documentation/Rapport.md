@@ -287,12 +287,29 @@ Première version de l'UDP discovery (pas fonctionnelle), plus d'informations da
 #### Tests ####
 
 ### UPD Discovery ###
-L'implémentation de l'UDP discovery peut se faire de plusieurs manières différentes. Pour son fonctionnement, on peut imaginer les scénarios suivants:
+L'implémentation de l'UDP discovery peut se faire de plusieurs manières différentes.
 
-1. Chaque *x* temps, le serveur envoie une requête en multicast avec le message *Qui est-là ?*
-2. Chaque *x* temps, les noeuds s'annoncent en multicast avec le message *Je suis là !*
-3. Le noeud s'annonce une première fois et chaque *x* temps, le serveur envoie en unicast pour chaque noeud le message *Est-ce que tu es toujours là ?*
+Pour son fonctionnement, on peut imaginer les scénarios suivants:
 
+1. Chaque *x* temps, le serveur envoie une requête en multicast avec le message:
+	- *Qui est-là ?*
+2. Chaque *x* temps, les noeuds s'annoncent en multicast avec le message:
+	- *Je suis là !*
+3. Le noeud s'annonce une première fois et chaque *x* temps, le serveur envoie en unicast pour chaque noeud le message:
+	- *Est-ce que tu es toujours là ?*
+
+Pour son implémentation, on peut imaginer les scénarios suivants:
+
+1. Le serveur UDP discovery est implémenter sur le load balancer:	
+	1. Il faut modifier le fichier de configuration du serveur Apache
+	2. Il faut redémarer le serveur Apache
+	3. **/!\ Il faut démarrer le load balancer avec le serveur UDP discovery et pas le serveur Apache**
+2. Le serveur UDP discovery et mis sur un conteneur seul:
+	1. Il faut modifier le fichier de configuration du serveur Apache
+	2. Il faut *re-build* l'image Docker du load balancer
+	3. **/!\ Il faut démarrer le conteneur du serveur UDP discovery avec une option de gestion de l'infrastructure Docker (option `--privileged` et lui passer le fichier `docker.sock`)**
+
+Pour la partie développement à proprement parler, on peut utiliser l'[https://docs.docker.com/reference/api/docker_remote_api/](https://docs.docker.com/reference/api/docker_remote_api/ "API de Docker").
 
 ## Conclusion ##
 Pendant ce laboratoire nous avons fait face à une situation concrète et complexe de gestion d'une infrastucture Web. Ceci nous a permis de mieux assimiler la théorie vue en classe.
