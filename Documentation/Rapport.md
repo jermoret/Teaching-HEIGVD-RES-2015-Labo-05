@@ -10,9 +10,11 @@ L'objectif de ce laboratoire est de mettre en place l'infrastructure suivante:
 
 ![](http://i.imgur.com/AzaGAq1l.png)
 
+Un utilisateur se connecte via le navigateur Web, qui envoie une requête au reverse proxy qui la fait suivre au front-end. Le front-end retourne ensuite la page HTML avec un script JavaScript qui communique via des requêtes avec le back-end.
+
 ## Développement ##
 ### Back-end ###
-Nous avons décidé dans un premier temps d’écrire un script en JavaScript qui lorsqu’il reçoit une requête http sur le port 80 avec comme URI un ‘/’  , il répond avec un Json qui contient le nom d’un étudiant tiré au hasard parmi une liste d’étudiant.
+La back-end renvoie un numéro aléatoire (à l'aide d'un script JavaScript) lorsqu'il reçoit une requête en utilisant Json. 
 
 #### Structure des fichiers ####
 Dossier back-end:
@@ -63,6 +65,8 @@ Le script lance simplement le script JavaScript.
 #### Tests ####
 
 ### Front-end ###
+Le front-end renvoie une page HTML lorsqu'il reçoit une requête. Cette page HTML a un script JavaScript qui comunique avec le back-end pour le lancement du dé.
+
 #### Structure des fichiers ####
 Dossier back-end:
 ![](http://i.imgur.com/P5mDg6G.png)
@@ -190,7 +194,7 @@ Dans cette section, nous installons le serveur Apache ainsi que tous les modules
 >     CustomLog ${APACHE_LOG_DIR}/access.log combined
 >     
 >     <Proxy balancer://frontend>
->     		
+>             
 >     # WebHead1
 >     BalancerMember http://172.17.0.30
 >     
@@ -205,10 +209,10 @@ Dans cette section, nous installons le serveur Apache ainsi que tous les modules
 >     </Proxy>
 >     
 >     <Proxy balancer://backend>
->     		# Enlever les balancerMember et les mettre depuis l'UDP discovery
->     		BalancerMember http://172.17.0.18
->     		
->     		ProxySet lbmethod=byrequests
+>             # Enlever les balancerMember et les mettre depuis l'UDP discovery
+>             BalancerMember http://172.17.0.18
+>             
+>             ProxySet lbmethod=byrequests
 >     </Proxy>
 >     
 >     
@@ -242,7 +246,7 @@ Lancer le serveur Apache.
 >     const RESPONSE = 'Je suis là';
 >     
 >     if(!($socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP))) {
->     	die('[ERREUR] : impossible de créer le socket');
+>         die('[ERREUR] : impossible de créer le socket');
 >     }
 >     socket_set_option($socket, SOL_SOCKET, MCAST_JOIN_GROUP, array('group' ='225.1.1.1', 'interface' ='eth0'));
 >     
@@ -253,12 +257,12 @@ Lancer le serveur Apache.
 >     socket_send($socket, $buff, strlen($buff), MSG_EOF);
 >     
 >     while(true) {
->     	$buffRet = '';
->     	if(socket_recv($socket, $buffRet, strlen(RESPONSE), MSG_EOF) === FALSE) {
->     		die('[ERREUR] : impossible de recevoir des data');
->     	}
->     	
->     	echo '<script type="text/javascript">console.log([DEBUG] : ' .$buffRet. ');</script>';
+>         $buffRet = '';
+>         if(socket_recv($socket, $buffRet, strlen(RESPONSE), MSG_EOF) === FALSE) {
+>             die('[ERREUR] : impossible de recevoir des data');
+>         }
+>         
+>         echo '<script type="text/javascript">console.log([DEBUG] : ' .$buffRet. ');</script>';
 >     }
 >     
 >     socket_close($socket);
@@ -279,3 +283,9 @@ Lancer le serveur Apache.
 
 #### Tests ####
 
+### UPD Rescovery ###
+
+## Conclusion ##
+Pendant ce laboratoire nous avons fait face à une situation concrete et complexe de gestion d'une insfrastucture Web. Ceci nous a permis de mieux assembler la théorie vu en classe.
+
+Nous avons rencontré quelques problèmes qui nous ont empéché d'assembler les plusieurs parties et avoir un résultat final complet.
