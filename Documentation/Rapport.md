@@ -1,7 +1,7 @@
 # RES: Web Infrastructure Lab #
 
 ## Introduction ##
-L'objectif de ce laboratoire est d'apprendre à mettre en place une infrastructure Web en tenant compte du rôle de plusieurs composants (serveurs HTTP, reverse proxy, équilibreur de charge).
+L'objectif de ce laboratoire est d'apprendre à mettre en place une infrastructure Web en tenant compte du rôle de plusieurs composants (serveurs HTTP, reverse proxy, load balancer).
 
 Pour ça nous avons utilisé plusieurs logiciels (VirtualBox, Vagrant et Docker) afin de créer un environnement virtualisé.
 
