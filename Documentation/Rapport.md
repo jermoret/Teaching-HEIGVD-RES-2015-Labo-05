@@ -46,12 +46,7 @@ Pour finir, le script run.sh sera exécuté au lancement du "container" qui va s
 >         res.send( JSON.stringify(dice) );
 >     });
 >     
->     var server = app.listen(80, function () {
->     
->       var host = server.address().address;
->       var port = server.address().port;
->     
->     });
+>     var server = app.listen(80, function () {});
 
 Le serveur écoute le port 80 et quand il reçoit une requête de la part de l'utilisateur il renvoie un chiffre aléatoire en réponse (simulation d'un lancement de dé).
 
@@ -108,6 +103,7 @@ Pour finir, le script run.sh est exécuté au démarrage du "container".
 >                 }
 >                 </script>
 >                 <div id="result" class="result"></div>
+>                 <p> Adresse IP du frontend : <?php echo $_SERVER['SERVER_ADDR']; ?><p>
 >             </div>
 >         </body>
 >     </html>
