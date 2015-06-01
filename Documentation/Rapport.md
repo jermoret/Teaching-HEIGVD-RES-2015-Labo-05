@@ -282,8 +282,6 @@ Première version de l'UDP discovery (pas fonctionnelle), plus d'informations da
 
 *Possibilité de modifier le fichier de configuration pour changer la méthode de load balancing (lbmethod_byrequests, ...).*
 
-#### Tests ####
-
 ### UDP Discovery ###
 L'implémentation de l'UDP discovery peut se faire de plusieurs manières différentes.
 
